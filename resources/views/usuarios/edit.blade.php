@@ -1,5 +1,4 @@
 <x-app-layout>
-    <x-slot></x-slot>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Editar Usuario
@@ -13,6 +12,7 @@
                 @csrf
                 @method('PUT')
 
+                <!-- Campos de usuario -->
                 <div>
                     <label for="nombreUsuario" class="block text-sm font-medium text-gray-700">Nombre de Usuario:</label>
                     <input id="nombreUsuario" name="nombreUsuario" type="text" required
@@ -88,7 +88,35 @@
                     @enderror
                 </div>
 
-                <div class="flex space-x-4">
+                <!-- Formulario de pasantía si es pasante -->
+                @if($usuario->role_id == 3)
+                    <div class="mt-6 p-4 border rounded bg-gray-50">
+                        <h3 class="text-lg font-medium text-gray-700 mb-4">Información de Pasantía</h3>
+
+                        <div>
+                            <label for="fechaInicio" class="block text-sm font-medium text-gray-700">Fecha de Inicio:</label>
+                            <input id="fechaInicio" name="fechaInicio" type="date"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                   value="{{ old('fechaInicio', $usuario->pasantia?->fechaInicio) }}">
+                        </div>
+
+                        <div>
+                            <label for="fechaFinal" class="block text-sm font-medium text-gray-700">Fecha Final:</label>
+                            <input id="fechaFinal" name="fechaFinal" type="date"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                   value="{{ old('fechaFinal', $usuario->pasantia?->fechaFinal) }}">
+                        </div>
+
+                        <div>
+                            <label for="horaIngreso" class="block text-sm font-medium text-gray-700">Hora de Ingreso:</label>
+                            <input id="horaIngreso" name="horaIngreso" type="time"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                   value="{{ old('horaIngreso', $usuario->pasantia?->horaIngreso) }}">
+                        </div>
+                    </div>
+                @endif
+
+                <div class="flex space-x-4 mt-6">
                     <button type="submit"
                             class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
                         Actualizar
@@ -98,6 +126,7 @@
                         Cancelar
                     </a>
                 </div>
+
             </form>
 
         </div>

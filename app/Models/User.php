@@ -3,10 +3,11 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory; // <-- agregado
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasFactory, Notifiable; // <-- HasFactory agregado
 
     protected $table = 'users';
 
@@ -35,4 +36,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'role_id');
     }
+    public function pasantia()
+    {
+        return $this->hasOne(Pasantia::class, 'idUser');
+    }
+    public function docente()
+    //Relación con Docente usando idUser
+    {
+      return $this->hasOne(Docente::class, 'idUser');
+    }
+
 }

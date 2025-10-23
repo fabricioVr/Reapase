@@ -1,11 +1,15 @@
-User::create([
-    'nombreUsuario' => 'admin2',
+\App\Models\User::where('nombreUsuario', 'admin')->delete();
+
+\App\Models\User::create([
+    'nombreUsuario' => 'admin',
     'clave' => bcrypt('admin'),
     'role_id' => 1,
-    'nombre' => 'Juan',
-    'paterno' => 'Pérez',
-    'materno' => 'Gómez',
-    'ci' => '12345678',
+    'nombre' => 'Administrador',
+    'paterno' => 'Principal',
+    'materno' => 'Del Sistema',
+    'ci' => '9999999',
 ]);
-usuario admin2
-consraseña admin
+
+// en tinker
+admin
+admin

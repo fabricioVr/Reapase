@@ -11,6 +11,7 @@
             <form action="{{ route('usuarios.store') }}" method="POST" class="space-y-6">
                 @csrf
 
+                <!-- Campos de usuario -->
                 <div>
                     <label for="nombreUsuario" class="block text-sm font-medium text-gray-700">Nombre de Usuario:</label>
                     <input id="nombreUsuario" name="nombreUsuario" type="text" required autofocus
@@ -24,7 +25,8 @@
                 <div>
                     <label for="clave" class="block text-sm font-medium text-gray-700">Contraseña:</label>
                     <input id="clave" name="clave" type="password" required
-                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" autocomplete="new-password">
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                           autocomplete="new-password">
                     @error('clave')
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
@@ -46,6 +48,7 @@
                     @enderror
                 </div>
 
+                <!-- Campos de usuario -->
                 <div>
                     <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre:</label>
                     <input id="nombre" name="nombre" type="text" required
@@ -86,7 +89,33 @@
                     @enderror
                 </div>
 
-                <div class="flex space-x-4">
+                <!-- Formulario de pasantía, oculto por defecto -->
+                <div id="pasantia-form" class="hidden mt-6 p-4 border rounded bg-gray-50">
+                    <h3 class="text-lg font-medium text-gray-700 mb-4">Información de Pasantía</h3>
+
+                    <div>
+                        <label for="fechaInicio" class="block text-sm font-medium text-gray-700">Fecha de Inicio:</label>
+                        <input id="fechaInicio" name="fechaInicio" type="date"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                               value="{{ old('fechaInicio') }}">
+                    </div>
+
+                    <div>
+                        <label for="fechaFinal" class="block text-sm font-medium text-gray-700">Fecha Final:</label>
+                        <input id="fechaFinal" name="fechaFinal" type="date"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                               value="{{ old('fechaFinal') }}">
+                    </div>
+
+                    <div>
+                        <label for="horaIngreso" class="block text-sm font-medium text-gray-700">Hora de Ingreso:</label>
+                        <input id="horaIngreso" name="horaIngreso" type="time"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                               value="{{ old('horaIngreso') }}">
+                    </div>
+                </div>
+
+                <div class="flex space-x-4 mt-6">
                     <button type="submit"
                             class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
                         Guardar
@@ -101,4 +130,22 @@
 
         </div>
     </div>
+
+    <script>
+        const roleSelect = document.getElementById('role_id');
+        const pasantiaForm = document.getElementById('pasantia-form');
+
+        roleSelect.addEventListener('change', () => {
+            if (roleSelect.value == '3') { // Pasante
+                pasantiaForm.classList.remove('hidden');
+            } else {
+                pasantiaForm.classList.add('hidden');
+            }
+        });
+
+        // Mostrar por defecto si hay old input
+        if (roleSelect.value == '3') {
+            pasantiaForm.classList.remove('hidden');
+        }
+    </script>
 </x-app-layout>

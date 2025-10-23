@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\RamController;
+use App\Http\Controllers\PasantiasController;
+use App\Http\Controllers\DocenteController;
 
 
 
@@ -27,3 +29,7 @@ require __DIR__.'/auth.php';
 // Rutas para marcas y RAM
 Route::resource('marcas', MarcaController::class);
 Route::resource('ram', RamController::class);
+//crud pasantes
+Route::resource('pasantias', PasantiasController::class);
+Route::resource('docentes', DocenteController::class);
+
