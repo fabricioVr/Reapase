@@ -87,7 +87,17 @@
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-
+                <!--Docente -->
+                @if($usuario->role_id == 1)
+                    <div class="mt-6 p-4 border rounded bg-gray-50">
+                        <h3 class="text-lg font-medium text-gray-700 mb-4">Información de Docente</h3>
+                    <div>
+                        <label for="carrera" class="block text-sm font-medium text-gray-700">Carrera:</label>
+                        <input id="carrera" name="carrera" type="text"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                               value="{{ old('carrera', $usuario->docente?->carrera) }}">
+                    </div>
+                @endif
                 <!-- Formulario de pasantía si es pasante -->
                 @if($usuario->role_id == 3)
                     <div class="mt-6 p-4 border rounded bg-gray-50">

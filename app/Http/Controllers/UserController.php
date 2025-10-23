@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Pasantia;
+use App\Models\Docente;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
- public function index(Request $request)
+  public function index(Request $request)
 {
-    $query = User::with('role', 'pasantia');
+    $roles = Role::all();
+
+    $query = User::with('role', 'pasantia', 'docente');
 
     if ($request->filled('role_id')) {
         $query->where('role_id', $request->role_id);
@@ -19,14 +22,14 @@ class UserController extends Controller
 
     $usuarios = $query->get();
 
-    return view('usuarios.index', compact('usuarios'));
+    return view('usuarios.index', compact('usuarios', 'roles'));
 }
-
 
 
     public function create()
     {
-        return view('usuarios.create');
+        $roles = Role::all();
+        return view('usuarios.create', compact('roles'));
     }
 
     public function store(Request $request)
@@ -42,6 +45,7 @@ class UserController extends Controller
             'fechaInicio' => 'nullable|date',
             'fechaFinal' => 'nullable|date',
             'horaIngreso' => 'nullable',
+            'carrera' => 'nullable|string|max:50',
         ]);
 
         $user = User::create([
@@ -54,13 +58,25 @@ class UserController extends Controller
             'ci' => $request->ci,
         ]);
 
+        // ===========================
         // Crear pasantía si es pasante
+        // ===========================
         if ($request->role_id == 3) {
             Pasantia::create([
                 'idUser' => $user->id,
                 'fechaInicio' => $request->fechaInicio,
                 'fechaFinal' => $request->fechaFinal,
                 'horaIngreso' => $request->horaIngreso,
+            ]);
+        }
+
+        // ===========================
+        // Crear docente si es docente
+        // ===========================
+        if ($request->role_id == 1) {
+            Docente::create([
+                'idUser' => $user->id,
+                'carrera' => $request->carrera,
             ]);
         }
 
@@ -86,6 +102,7 @@ class UserController extends Controller
             'fechaInicio' => 'nullable|date',
             'fechaFinal' => 'nullable|date',
             'horaIngreso' => 'nullable',
+            'carrera' => 'nullable|string|max:50',
         ]);
 
         $usuario->nombreUsuario = $request->nombreUsuario;
@@ -101,7 +118,9 @@ class UserController extends Controller
         $usuario->ci = $request->ci;
         $usuario->save();
 
-        // Crear o actualizar pasantía si es pasante
+        // =================================
+        // Actualizar o eliminar pasantía
+        // =================================
         if ($request->role_id == 3) {
             $pasantia = $usuario->pasantia ?? new Pasantia();
             $pasantia->idUser = $usuario->id;
@@ -110,9 +129,22 @@ class UserController extends Controller
             $pasantia->horaIngreso = $request->horaIngreso;
             $pasantia->save();
         } else {
-            // Eliminar pasantía si el rol ya no es pasante
             if ($usuario->pasantia) {
                 $usuario->pasantia->delete();
+            }
+        }
+
+        // =================================
+        // Actualizar o eliminar docente
+        // =================================
+        if ($request->role_id == 1) {
+            $docente = $usuario->docente ?? new Docente();
+            $docente->idUser = $usuario->id;
+            $docente->carrera = $request->carrera;
+            $docente->save();
+        } else {
+            if ($usuario->docente) {
+                $usuario->docente->delete();
             }
         }
 
@@ -124,6 +156,11 @@ class UserController extends Controller
         // Eliminar pasantía si existe
         if ($usuario->pasantia) {
             $usuario->pasantia->delete();
+        }
+
+        // Eliminar docente si existe
+        if ($usuario->docente) {
+            $usuario->docente->delete();
         }
 
         $usuario->delete();
